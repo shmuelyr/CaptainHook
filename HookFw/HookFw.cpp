@@ -42,6 +42,7 @@ HookFw::HookFw(void **ppvSrc, void *pvDst, unsigned short nHookType) {
 		printf("disassembly parser fail\n");
 		return;
 	}
+
 	this->HookChain.nSize = uiSizeOfStolenOpcode + HookLen::JMP_HOOKTYPE_LEN;
 	VirtualProtect(this->pvSrc, uiSizeOfStolenOpcode, PAGE_EXECUTE_READWRITE, &ulOldProtect);
 	this->HookChain.pMem = (unsigned char *)VirtualAlloc(NULL, this->HookChain.nSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
@@ -136,28 +137,36 @@ signed int HookFw::GetAddressForSafeHook() {
 	cs_insn *pInsn;
 	unsigned int uiCount;
 	unsigned int uiByteCounter;
+	unsigned int uiRemoteAddress;
 
 	if (cs_open(CS_ARCH_X86, ARCH_MODE, &cshHandle) != CS_ERR_OK) {
 
 		return ERR_CANNOT_RESOLVE_ASM;
 	}
-	uiCount = (unsigned int)cs_disasm(cshHandle, (unsigned char *)this->pvSrc, 0x50, 0x100, 0, &pInsn);
+
+	uiCount = (unsigned int)cs_disasm(cshHandle, (unsigned char *)this->pvSrc, 0x50, (addr)this->pvSrc, 0, &pInsn);
 	if (uiCount >= this->nHookLen) {
 
 		uiByteCounter = 0;
 		for (unsigned int uiIndex = 0; uiIndex < uiCount; uiIndex++) {
 
-			char *pszInstStr = pInsn[uiIndex].mnemonic;
-			if ((pszInstStr[0] != *(unsigned char *)"j") || (pszInstStr[0] != *(char *)"c")) {
+			if (strncmp(pInsn[uiIndex].mnemonic, "jmp", 3) == 0) {
 
-				uiByteCounter += pInsn[uiIndex].size;
-				if (uiByteCounter >= this->nHookLen) {
+				if (pInsn[uiIndex].size == 2) {
 
+					printf("sort jump : error\n");
+					return -1;
+				}
+				sscanf(pInsn[uiIndex].op_str + 2, "%"__addr__, &uiRemoteAddress);
+
+				this->pvSrc = (void *)uiRemoteAddress;
+				if (GetAddressForSafeHook() == 0) {
 					return 0;
 				}
 			}
-			else {
-
+			uiByteCounter += pInsn[uiIndex].size;
+			if (uiByteCounter >= this->nHookLen) {
+				return 0;
 			}
 		}
 	}

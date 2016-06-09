@@ -28,10 +28,12 @@ extern "C" {
 #if defined(_M_X64) || defined(__amd64__)
 	
 	typedef unsigned long long addr;
+	#define __addr__ "%ull"
 	#define ARCH_MODE CS_MODE_64
 #elif _WIN32
 	
 	typedef unsigned long addr;
+	#define __addr__ "ul"	
 	#define ARCH_MODE CS_MODE_32
 #endif
 
