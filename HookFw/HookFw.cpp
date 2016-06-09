@@ -143,34 +143,34 @@ signed int HookFw::GetAddressForSafeHook() {
 
 		return ERR_CANNOT_RESOLVE_ASM;
 	}
+	for (unsigned int uiLoop = 0; uiLoop < 3; uiLoop++) {
 
-	uiCount = (unsigned int)cs_disasm(cshHandle, (unsigned char *)this->pvSrc, 0x50, (addr)this->pvSrc, 0, &pInsn);
-	if (uiCount >= this->nHookLen) {
+		uiCount = (unsigned int)cs_disasm(cshHandle, (unsigned char *)this->pvSrc, 0x50, (addr)this->pvSrc, 0, &pInsn);
+		if (uiCount >= this->nHookLen) {
 
-		uiByteCounter = 0;
-		for (unsigned int uiIndex = 0; uiIndex < uiCount; uiIndex++) {
+			for (unsigned int uiIndex = 0; uiIndex < uiCount; uiIndex++) {
 
-			if (strncmp(pInsn[uiIndex].mnemonic, "jmp", 3) == 0) {
-
-				if (pInsn[uiIndex].size == 2) {
-
-					printf("sort jump : error\n");
-					return -1;
+				if (strncmp(pInsn[uiIndex].mnemonic, "jmp", 3) == 0) {
+				
+					if (pInsn[uiIndex].size == 2) {
+					
+						printf("sort jump : error\n");
+						return -1;
+					}
+					sscanf(pInsn[uiIndex].op_str + 2, "%p", &uiRemoteAddress);
+					this->pvSrc = (void *)uiRemoteAddress;
+					uiByteCounter = 0;
 				}
-				sscanf(pInsn[uiIndex].op_str + 2, "%"__addr__, &uiRemoteAddress);
+				else {
 
-				this->pvSrc = (void *)uiRemoteAddress;
-				if (GetAddressForSafeHook() == 0) {
-					return 0;
+					uiByteCounter += pInsn[uiIndex].size;
+					if (uiByteCounter >= this->nHookLen)
+						return 0;
 				}
-			}
-			uiByteCounter += pInsn[uiIndex].size;
-			if (uiByteCounter >= this->nHookLen) {
-				return 0;
 			}
 		}
 	}
-	return 0;
+	return -1;
 }
 
 unsigned int HookFw::AnalyzeStartOfCodeForSafePatch(cs_insn *pInsn, unsigned int uiCount) {
