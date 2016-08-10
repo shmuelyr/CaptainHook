@@ -5,7 +5,7 @@ CaptainHook is easy to using, and very freandly.
 the hook engine is much like MS Detours, so why to choose it?
 * its support x64 (Detours x64 is commerical - $10,000~)
 * CaptainHook will know where to locate your hook in real time, its analyize the code, and find if small API redirection (Wow64 hook on kernelbase for example, or on protector like VMP or Themida) was occurred
-* in the next release, CaptainHook will contain an engine for jmp/conditional jmp reper - if your hook corrupt sensitive code
+* in the next release, CaptainHook will contain an engine for jmp/conditional jmp repair - if your hook corrupt sensitive code
 * in the next release, CaptainHook will contain more hook type, like PageGuard hooking etc.
 
 code example:
