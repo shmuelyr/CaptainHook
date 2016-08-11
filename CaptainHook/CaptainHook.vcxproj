@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E95A7AC3-1B52-4E37-8C6F-D23CE3B840E0}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>CaptainHook</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\ShmuelY\Documents\Visual Studio 2013\Projects\CaptainHook\CaptainHook\BeaEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\ShmuelY\Documents\Visual Studio 2013\Projects\CaptainHook\CaptainHook\BeaEngine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>capstone-3.0.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/D "CAPSTONE_HAS_X86"  /D "CAPSTONE_USE_SYS_DYN_MEM" %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>capstone-3.0.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/D "CAPSTONE_HAS_X86"  /D "CAPSTONE_USE_SYS_DYN_MEM" %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="CaptainHook.h" />
+    <ClInclude Include="Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64BaseInfo.c" />
+    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64Disassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64InstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64Mapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64Module.c" />
+    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMDisassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMMapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMModule.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsDisassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsMapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsModule.c" />
+    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCDisassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCMapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCModule.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcDisassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcMapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcModule.c" />
+    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZDisassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZMapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZMCTargetDesc.c" />
+    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZModule.c" />
+    <ClCompile Include="capstone-3.0.4\arch\X86\X86ATTInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\X86\X86Disassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\X86\X86DisassemblerDecoder.c" />
+    <ClCompile Include="capstone-3.0.4\arch\X86\X86IntelInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\X86\X86Mapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\X86\X86Module.c" />
+    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreDisassembler.c" />
+    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreInstPrinter.c" />
+    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreMapping.c" />
+    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreModule.c" />
+    <ClCompile Include="capstone-3.0.4\cs.c" />
+    <ClCompile Include="capstone-3.0.4\MCInst.c" />
+    <ClCompile Include="capstone-3.0.4\MCInstrDesc.c" />
+    <ClCompile Include="capstone-3.0.4\MCRegisterInfo.c" />
+    <ClCompile Include="capstone-3.0.4\SStream.c" />
+    <ClCompile Include="capstone-3.0.4\utils.c" />
+    <ClCompile Include="CaptainHook.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,18 @@
+﻿Build started 10/08/2016 3:00:38 PM.
+     1>Project "C:\Users\ShmuelY\Documents\Visual Studio 2013\Projects\CaptainHook\CaptainHook\CaptainHook.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\ShmuelY\Documents\Visual Studio 2013\Projects\CaptainHook\CaptainHook\BeaEngine\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt "capstone-3.0.4\MCInst.c" "capstone-3.0.4\SStream.c" "capstone-3.0.4\cs.c" "capstone-3.0.4\utils.c"
+         utils.c
+     1>c:\users\shmuely\documents\visual studio 2013\projects\captainhook\captainhook\capstone-3.0.4\cs_priv.h(7): fatal error C1083: Cannot open include file: 'capstone.h': No such file or directory
+         cs.c
+     1>c:\users\shmuely\documents\visual studio 2013\projects\captainhook\captainhook\capstone-3.0.4\cs.c(15): fatal error C1083: Cannot open include file: 'capstone.h': No such file or directory
+         SStream.c
+     1>c:\users\shmuely\documents\visual studio 2013\projects\captainhook\captainhook\capstone-3.0.4\cs_priv.h(7): fatal error C1083: Cannot open include file: 'capstone.h': No such file or directory
+         MCInst.c
+     1>c:\users\shmuely\documents\visual studio 2013\projects\captainhook\captainhook\capstone-3.0.4\cs_priv.h(7): fatal error C1083: Cannot open include file: 'capstone.h': No such file or directory
+         Generating Code...
+     1>Done Building Project "C:\Users\ShmuelY\Documents\Visual Studio 2013\Projects\CaptainHook\CaptainHook\CaptainHook.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.34
