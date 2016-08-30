@@ -17,8 +17,9 @@ void (__fastcall *CH_OriginalFunction)(...) = OriginalFunction;
 int main() {
 
     CaptainHook *pChook = new CaptainHook(&(void *&)CH_OriginalFunction, HookedOriginalFunction);
+    if (!pChook) return 0;
     Sleep(100);
-    pChook->~CaptainHook();
+    delete pChook;
     return 0;
 }
 ```
