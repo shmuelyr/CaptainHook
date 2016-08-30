@@ -166,7 +166,7 @@ signed int CaptainHook::GetAddressForSafeHook() {
 unsigned int CaptainHook::AnalyzeStartOfCodeForSafePatch(cs_insn *pInsn, unsigned int uiCount) {
 
 	/*
-	* this routin analyze the code, and update pvSrc for safe hook. for example:
+	* this routine analyzes the code, and updates pvSrc for safe hook. for example:
 	*	| kernel32.GetProcAddress     : mov r8,qword ptr ss:[rsp]
 	*	| kernel32.GetProcAddress + 4 : jmp qword ptr ds:[<&GetProcAddressForCaller>]
 	* in this situation hot patch destroy the function, cause GetProcAddress redirect to GetProcAddressForCaller.
@@ -183,6 +183,7 @@ unsigned int CaptainHook::AnalyzeStartOfCodeForSafePatch(cs_insn *pInsn, unsigne
 			uiIndex++;
 		}
 	}
+	return 0;
 }
 
 unsigned int CaptainHook::BuildX86Hook(unsigned int uiSizeOfStolenOpcode, unsigned short nHookType) {
