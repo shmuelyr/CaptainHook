@@ -1,12 +1,12 @@
 # CaptainHook
 
-CaptainHook is hooking framwork for x86/x64 arch, it's based on [capstone](https://github.com/aquynh/capstone) disassembler engine. CaptainHook equipped with smart engine (TO FINISH).
-CaptainHook is easy to using, and very freandly.
-the hook engine is much like MS Detours, so why to choose it?
-* its support x64 (Detours x64 is commerical - $10,000~)
-* CaptainHook will know where to locate your hook in real time, its analyze the code, and find if small API redirection (Wow64 hook on kernelbase for example, or on protector like VMP or Themida) was occurred
-* in the next release, CaptainHook will contain an engine for jmp/conditional jmp repair - if your hook corrupt sensitive code
-* in the next release, CaptainHook will contain more hook type, like PageGuard hooking etc.
+CaptainHook is a hooking framwork for x86/x64 arch, it's based on the [capstone](https://github.com/aquynh/capstone) disassembler engine. CaptainHook equipped with smart engine (TO FINISH).
+CaptainHook is easy to use, and very friendly.
+The hook engine is very similar too MS Detours, so why choose CaptainHook?
+* it supports x64. (Detours x64 is commerical - $10,000~)
+* CaptainHook will know where too locate your hook in real time, it analyzes the code, and finds if a small API redirection (Wow64 hook on kernelbase for example, or on protector like VMP or Themida) has occurred.
+* in the next release, CaptainHook will contain an engine for jmp/conditional jmp repairing - if you hook corrupt, sensitive code.
+* in the next release, CaptainHook will contain more hook types, like PageGuard hooking, etc.
 
 code example:
 ```c++
@@ -23,7 +23,7 @@ int main() {
 }
 ```
 TODO :
-* Finish the smart engine to enable hot patch on jmp instruction - with all conditional jmp
+* Finish the smart engine to enable hot patching on jmp instructions - with all conditional jmps
 * Finish code analysis for function redirect (on x64 its very common)
 
 Happy Hooking!
