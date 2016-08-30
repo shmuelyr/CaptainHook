@@ -3,7 +3,7 @@
 
 #include <windows.h>
 #include <stdio.h>
-#include "capstone-3.0.4\include\capstone.h"
+#include "capstone\include\capstone.h"
 
 #define LONG_JMP 0xe9
 #define PUSH_0   0x006a

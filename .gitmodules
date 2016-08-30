@@ -1,0 +1,3 @@
+[submodule "CaptainHook/capstone"]
+	path = CaptainHook/capstone
+	url = https://github.com/aquynh/capstone.git

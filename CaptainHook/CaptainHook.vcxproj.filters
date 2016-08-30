@@ -29,130 +29,130 @@
     <ClCompile Include="CaptainHook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\cs.c">
+    <ClCompile Include="capstone\cs.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\X86\X86ATTInstPrinter.c">
+    <ClCompile Include="capstone\arch\X86\X86ATTInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\X86\X86Disassembler.c">
+    <ClCompile Include="capstone\arch\X86\X86Disassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\X86\X86DisassemblerDecoder.c">
+    <ClCompile Include="capstone\arch\X86\X86DisassemblerDecoder.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\X86\X86IntelInstPrinter.c">
+    <ClCompile Include="capstone\arch\X86\X86IntelInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\X86\X86Mapping.c">
+    <ClCompile Include="capstone\arch\X86\X86Mapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\X86\X86Module.c">
+    <ClCompile Include="capstone\arch\X86\X86Module.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64BaseInfo.c">
+    <ClCompile Include="capstone\arch\AArch64\AArch64BaseInfo.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64Disassembler.c">
+    <ClCompile Include="capstone\arch\AArch64\AArch64Disassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64InstPrinter.c">
+    <ClCompile Include="capstone\arch\AArch64\AArch64InstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64Mapping.c">
+    <ClCompile Include="capstone\arch\AArch64\AArch64Mapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\AArch64\AArch64Module.c">
+    <ClCompile Include="capstone\arch\AArch64\AArch64Module.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMDisassembler.c">
+    <ClCompile Include="capstone\arch\ARM\ARMDisassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMInstPrinter.c">
+    <ClCompile Include="capstone\arch\ARM\ARMInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMMapping.c">
+    <ClCompile Include="capstone\arch\ARM\ARMMapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\ARM\ARMModule.c">
+    <ClCompile Include="capstone\arch\ARM\ARMModule.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\MCInst.c">
+    <ClCompile Include="capstone\MCInst.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\MCInstrDesc.c">
+    <ClCompile Include="capstone\MCInstrDesc.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\MCRegisterInfo.c">
+    <ClCompile Include="capstone\MCRegisterInfo.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsDisassembler.c">
+    <ClCompile Include="capstone\arch\Mips\MipsDisassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsInstPrinter.c">
+    <ClCompile Include="capstone\arch\Mips\MipsInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsMapping.c">
+    <ClCompile Include="capstone\arch\Mips\MipsMapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Mips\MipsModule.c">
+    <ClCompile Include="capstone\arch\Mips\MipsModule.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCDisassembler.c">
+    <ClCompile Include="capstone\arch\PowerPC\PPCDisassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCInstPrinter.c">
+    <ClCompile Include="capstone\arch\PowerPC\PPCInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCMapping.c">
+    <ClCompile Include="capstone\arch\PowerPC\PPCMapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\PowerPC\PPCModule.c">
+    <ClCompile Include="capstone\arch\PowerPC\PPCModule.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcDisassembler.c">
+    <ClCompile Include="capstone\arch\Sparc\SparcDisassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcInstPrinter.c">
+    <ClCompile Include="capstone\arch\Sparc\SparcInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcMapping.c">
+    <ClCompile Include="capstone\arch\Sparc\SparcMapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\Sparc\SparcModule.c">
+    <ClCompile Include="capstone\arch\Sparc\SparcModule.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\SStream.c">
+    <ClCompile Include="capstone\SStream.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZDisassembler.c">
+    <ClCompile Include="capstone\arch\SystemZ\SystemZDisassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZInstPrinter.c">
+    <ClCompile Include="capstone\arch\SystemZ\SystemZInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZMapping.c">
+    <ClCompile Include="capstone\arch\SystemZ\SystemZMapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZMCTargetDesc.c">
+    <ClCompile Include="capstone\arch\SystemZ\SystemZMCTargetDesc.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\SystemZ\SystemZModule.c">
+    <ClCompile Include="capstone\arch\SystemZ\SystemZModule.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\utils.c">
+    <ClCompile Include="capstone\utils.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreDisassembler.c">
+    <ClCompile Include="capstone\arch\XCore\XCoreDisassembler.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreInstPrinter.c">
+    <ClCompile Include="capstone\arch\XCore\XCoreInstPrinter.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreMapping.c">
+    <ClCompile Include="capstone\arch\XCore\XCoreMapping.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
-    <ClCompile Include="capstone-3.0.4\arch\XCore\XCoreModule.c">
+    <ClCompile Include="capstone\arch\XCore\XCoreModule.c">
       <Filter>Source Files\capstone</Filter>
     </ClCompile>
   </ItemGroup>
