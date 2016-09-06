@@ -190,7 +190,7 @@ unsigned int CaptainHook::BuildX86Hook(unsigned int uiSizeOfStolenOpcode, unsign
 
 	// build trampoline from hookchain to real code.
 	*((unsigned char *)this->HookChain.pMem + uiSizeOfStolenOpcode) = LONG_JMP;
-	*((addr *)((unsigned char *)this->HookChain.pMem + uiSizeOfStolenOpcode + 1)) = (addr)this->pvSrc - uiSizeOfStolenOpcode - ((addr)this->HookChain.pMem + uiSizeOfStolenOpcode) + 5;
+	*((addr *)((unsigned char *)this->HookChain.pMem + uiSizeOfStolenOpcode + 1)) = (addr)this->pvSrc - (addr)this->HookChain.pMem - 5;
 
 	// build trampoline from real code to hook function.
 	*(unsigned char *)this->pvSrc = LONG_JMP;
