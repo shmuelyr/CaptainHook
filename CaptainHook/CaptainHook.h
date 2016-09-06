@@ -1,5 +1,5 @@
-#ifndef __HOOKFW_H__
-#define __HOOKFW_H__
+#ifndef __CAPTAINHOOK_H__
+#define __CAPTAINHOOK_H__
 
 #include "Utils.h"
 
@@ -41,4 +41,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif /* __HOOKFW_H__ */
+#endif /* __CAPTAINHOOK_H__ */
