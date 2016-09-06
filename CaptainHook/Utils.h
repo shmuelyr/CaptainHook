@@ -1,5 +1,5 @@
-#ifndef __VARIABLES_H__
-#define __VARIABLES_H__
+#ifndef __UTILS_H__
+#define __UTILS_H__
 
 #include <windows.h>
 #include <stdio.h>
@@ -55,4 +55,4 @@ extern "C" {
 }
 #endif
 
-#endif /*__VARIABLES_H__*/
+#endif /*__UTILS_H__*/
