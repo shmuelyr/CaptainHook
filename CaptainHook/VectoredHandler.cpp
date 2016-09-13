@@ -6,7 +6,7 @@ VECTOREXCPTION_RESOLVED g_VectorHandlerChain[256] = { 0 };
 unsigned int g_uiVectorHandlerMaxChainSize = 256;
 unsigned int g_uiVectorHandlerChainSize = 0;
 
-LONG HardwareBreakPointManager(PEXCEPTION_POINTERS pExceptionInfo) {
+LONG PageGuardExceptionManager(PEXCEPTION_POINTERS pExceptionInfo) {
 
 	if (pExceptionInfo->ExceptionRecord->ExceptionCode == STATUS_GUARD_PAGE_VIOLATION) {
 		
