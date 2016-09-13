@@ -13,6 +13,7 @@ The hook engine is much like MS Detours, so why to choose it?
 
 code example:
 ```c++
+
 #include "CaptainHook.h"
 #pragma comment(lib, "CaptainHook.lib")
 
@@ -31,10 +32,7 @@ int main() {
     return 0;
 }
 ```
-#### in the next version:
-* function that give you the power to disable/enable hook at runtime.
-* IAT hooking, for dll function.
-* hooking with hardware breakpoint.
+CaptainHook.h for include is just [this](https://github.com/shmuelyr/CaptainHook/blob/master/CaptainHook/CaptainHook_for_include.h) file
 
 ### how to build?
 ```shell
@@ -43,5 +41,10 @@ int main() {
 > "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools\vsvars32.bat"
 > msbuild.exe
 ```
+
+### in the next version:
+* function that give you the power to disable/enable hook at runtime.
+* IAT hooking, for dll function.
+* hooking with hardware breakpoint.
 
 Happy Hooking!
