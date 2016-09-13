@@ -36,4 +36,12 @@ int main() {
 * IAT hooking, for dll function.
 * hooking with hardware breakpoint.
 
+### how to build?
+```shell
+> git clone --recursive https://github.com/shmuelyr/CaptainHook.git
+> cd CaptainHook
+> "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools\vsvars32.bat"
+> msbuild.exe
+```
+
 Happy Hooking!
