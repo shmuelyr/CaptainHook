@@ -19,7 +19,7 @@ extern "C" {
 	extern unsigned int g_uiVectorHandlerMaxChainSize;
 	extern unsigned int g_uiVectorHandlerChainSize;
 
-	LONG HardwareBreakPointManager(PEXCEPTION_POINTERS pExceptionInfo);
+	LONG PageGuardExceptionManager(PEXCEPTION_POINTERS pExceptionInfo);
 
 #ifdef __cplusplus
 }
