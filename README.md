@@ -13,7 +13,7 @@ The hook engine is much like MS Detours, so why to choose it?
 
 code example:
 ```c++
-#inclide "CaptainHook.h"
+#include "CaptainHook.h"
 #pragma comment(lib, "CaptainHook.lib")
 
 void (__fastcall *CH_OriginalFunction_1)(...) = OriginalFunction_1;
