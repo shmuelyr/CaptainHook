@@ -27,7 +27,7 @@ CaptainHook::CaptainHook() {
 
 	this->uiFuncitonChainCounter = 0;
 	this->uiFuncitonChainSize = 10;
-	this->pVectorHandle = AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)HardwareBreakPointManager);
+	this->pVectorHandle = AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)PageGuardExceptionManager);
 	if (!this->pVectorHandle) {
 
 		// add operation
