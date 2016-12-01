@@ -90,7 +90,7 @@ unsigned int CaptainHook::AddInlineHook(void **ppvSrc, void *pvDst) {
 	}
 	this->pFunctionChain[this->uiFuncitonChainCounter].uiHookSize = uiSizeOfStolenOpcode;
 	this->pFunctionChain[this->uiFuncitonChainCounter].pOriginalFunction = (unsigned char *)this->pvSrc;
-	this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize = uiSizeOfStolenOpcode + JMP_TRAMPOLINE_LEN;
+	this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize = uiSizeOfStolenOpcode + HookLen::JMP_HOOKTYPE_LEN;
 	this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction = (unsigned char *)VirtualAlloc(NULL, this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 	if (this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction == 0) return Ch_ALLOC_ERR;
 	if (VirtualProtect(this->pvSrc, uiSizeOfStolenOpcode, PAGE_EXECUTE_READWRITE, &ulOldProtect) == 0) return CH_VIRTUALPROTECT_ERR;
@@ -125,12 +125,12 @@ unsigned int CaptainHook::AddPageGuardHook(void **ppvSrc, void *pvDst) {
 	g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnOriginalFunction = (addr)this->pvSrc;
 	g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnHookedFunction = (addr)this->pvDst;
 	
-	uiSizeOfStolenOpcode = GetAlignedOpcodeForHook(PG_HOOKTYPE_LEN);
+	uiSizeOfStolenOpcode = GetAlignedOpcodeForHook(0);
 	if (uiSizeOfStolenOpcode == ERR_CANNOT_RESOLVE_ASM) {
 
 		return CH_CAPSTONE_ASM_ERR;
 	}
-	this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize = uiSizeOfStolenOpcode + JMP_TRAMPOLINE_LEN;
+	this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize = uiSizeOfStolenOpcode + HookLen::JMP_HOOKTYPE_LEN;
 	this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction = (unsigned char *)VirtualAlloc(NULL, this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 	if (this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction == 0) {
 
