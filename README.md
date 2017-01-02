@@ -1,4 +1,4 @@
-# CaptainHook (version 2.0 beta)
+# CaptainHook (version 2.0 release)
 
 CaptainHook is a hook framework for x86/x64 arch, it's based on [capstone](https://github.com/aquynh/capstone) disassembler engine. CaptainHook is equipped with smart engine (TO FINISH).
 CaptainHook is easy to use, and very friendly.
