@@ -42,7 +42,9 @@ extern "C" {
 #elif _WIN32
 		
 		JMP_HOOKTYPE_LEN = LEN_JMPABS,
+		JMP_TRAMPOLINE_LEN = LEN_JMPABS,
 #endif
+		PG_HOOKTYPE_LEN = 1
 	}; /* HookLen */
 
 	enum HookType {

@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="CaptainHook.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="VectoredHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="capstone\arch\AArch64\AArch64BaseInfo.c" />
@@ -181,6 +182,7 @@
     <ClCompile Include="capstone\SStream.c" />
     <ClCompile Include="capstone\utils.c" />
     <ClCompile Include="CaptainHook.cpp" />
+    <ClCompile Include="VectoredHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

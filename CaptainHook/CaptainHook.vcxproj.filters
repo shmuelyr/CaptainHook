@@ -24,6 +24,9 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VectoredHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CaptainHook.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="capstone\arch\XCore\XCoreModule.c">
       <Filter>Source Files\capstone</Filter>
+    </ClCompile>
+    <ClCompile Include="VectoredHandler.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
