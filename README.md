@@ -47,4 +47,29 @@ CaptainHook.h for include is just [this](https://github.com/shmuelyr/CaptainHook
 * IAT hooking, for dll function.
 * hooking with hardware breakpoint.
 
+### Full example:
+```c++
+
+#include <Windows.h>
+#include "CaptainHook.h"
+
+#pragma comment(lib, "CaptainHook.lib")
+
+int(__stdcall *CH_OriginalMessageBoxA)
+	(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType) = MessageBoxA;
+int __stdcall MyMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType) {
+
+	return CH_OriginalMessageBoxA(hWnd, "HOOK", "HOOK", uType);
+}
+
+int WinMain(HINSTANCE hIns, HINSTANCE hPrev, LPSTR lpCmdLine, int cCmdShow) {
+	
+	CaptainHook *pChook = new CaptainHook();
+	pChook->AddPageGuardHook(&(void *&)CH_OriginalMessageBoxA, MyMessageBoxA);
+	MessageBoxA(NULL, "test", "test", MB_OK);
+	return 0;
+}
+```
+
+
 Happy Hooking!
