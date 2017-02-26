@@ -10,16 +10,16 @@ extern "C" {
 #endif
 
 	typedef struct _VECTOREXCPTION_RESOLVED {
+		
+		unsigned int uiHookId;
 		addr pfnOriginalFunction;
 		addr pfnHookedFunction;
 
 	} VECTOREXCPTION_RESOLVED, *PVECTOREXCPTION_RESOLVED;
 
-	extern VECTOREXCPTION_RESOLVED g_VectorHandlerChain[256];
-	extern unsigned int g_uiVectorHandlerMaxChainSize;
-	extern unsigned int g_uiVectorHandlerChainSize;
-
-	LONG HardwareBreakPointManager(PEXCEPTION_POINTERS pExceptionInfo);
+	extern std::vector<VECTOREXCPTION_RESOLVED> g_VectorHandlerList;
+	
+	long HardwareBreakPointManager(PEXCEPTION_POINTERS pExceptionInfo);
 
 #ifdef __cplusplus
 }
