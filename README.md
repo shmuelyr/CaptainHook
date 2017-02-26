@@ -61,7 +61,6 @@ CaptainHook.h for include is just [this](https://github.com/shmuelyr/CaptainHook
 ```
 
 ### in the next version:
-* function that give you the power to disable/enable hook at runtime.
 * IAT hooking, for dll function.
 * hooking with hardware breakpoint.
 
