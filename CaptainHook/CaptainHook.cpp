@@ -12,150 +12,232 @@
 #include "CaptainHook.h"
 
 /*
-@param1: point to source function that will hook
-@param2: point to dest finction that whill chain to source
-@param3: hook type : long_jmp for currently time
+*
+CaptainHook constructor just init internal inf
 ------------------------------------------------
-TODO : build realable trampoline, and give the user to choice when call to source function.
-TODO : build smart engine to enable hot patch on jmp instruction [with all conditional jmp
-	   (if the hook locate on jmp instruction - for example on memset function)
-	   * fix the jmp destinention.
-	   * scan the currnet function for reference to stolen jmp and fix the destinention.
-TODO : Finish AnalyzeStartOfCodeForSafePatch function.
 */
 CaptainHook::CaptainHook() {
 
-	this->uiFuncitonChainCounter = 0;
-	this->uiFuncitonChainSize = 10;
+	this->uiInternalCounter = 0;
 	this->pVectorHandle = AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)HardwareBreakPointManager);
 	if (!this->pVectorHandle) {
 
 		// add operation
 	}
-	if (this->uiFuncitonChainSize > sizeof(FUNCTION_CHAIN) * this->uiFuncitonChainSize) {
-
-		// add operation
-	}
-	
-	this->pFunctionChain = (PFUNCTION_CHAIN)VirtualAlloc(0, sizeof(FUNCTION_CHAIN) * this->uiFuncitonChainSize, MEM_COMMIT, PAGE_READWRITE);
-	if (!this->pFunctionChain) {
-
-		// add operation
-	}
-	
 }
 
+/*
+*
+~CaptainHook destructor remove all your hooks
+------------------------------------------------
+*/
 CaptainHook::~CaptainHook() {
 
-	
-	RemoveVectoredExceptionHandler(this->pVectorHandle);
+ 	RemoveVectoredExceptionHandler(this->pVectorHandle);
 
-	for (unsigned int uiIndex = 0; uiIndex < this->uiFuncitonChainCounter; uiIndex++) {
+	for each (HOOK_INF Function in this->FunctionList) {
 
-		if ((this->pFunctionChain[this->uiFuncitonChainCounter].pOriginalFunction) &&
-			(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction)) {
+		if ((Function.pOriginalFunction != 0) && (Function.pEmulatedFunction)) {
 
 			memcpy(
-				(void *)this->pFunctionChain[this->uiFuncitonChainCounter].pOriginalFunction,
-				(void *)this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction,
-				this->pFunctionChain[this->uiFuncitonChainCounter].uiHookSize);
+				(void *)Function.pOriginalFunction,
+				(void *)Function.pEmulatedFunction,
+				Function.uiHookSize);
 
 			VirtualFree(
-				this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction,
-				this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize,
-				MEM_RELEASE);
+				Function.pEmulatedFunction,
+				Function.uiGlobalSize,
+				MEM_DECOMMIT);
 		}
 	}
-	VirtualFree(
-		this->pFunctionChain,
-		sizeof(FUNCTION_CHAIN) * this->uiFuncitonChainSize,
-		MEM_RELEASE);
+	this->FunctionList.~vector();
+	this->DisabledPGHookList.~vector();
+	g_VectorHandlerList.~vector();
 }
 
+/*
+*
+* @param1: point to source function that will hook
+* @param2: point to dest finction that whill chain to source
+------------------------------------------------
+AddInlineHook instert inline hook without HookId
+*/
 unsigned int CaptainHook::AddInlineHook(void **ppvSrc, void *pvDst) {
 
+	unsigned int uiId;
+	return this->AddInlineHook(ppvSrc, pvDst, &uiId);
+}
+
+/*
+*
+* @param1: point to source function that will hook
+* @param2: point to dest finction that whill chain to source
+------------------------------------------------
+AddPageGuardHook set memory protection on the first line(whole page..) and build a hook without HookId
+*/
+unsigned int CaptainHook::AddPageGuardHook(void **ppvSrc, void *pvDst) {
+
+	unsigned int uiHookId;
+	return AddPageGuardHook(ppvSrc, pvDst, &uiHookId);
+}
+
+/*
+*
+* @param1: point to source function that will hook
+* @param2: point to dest finction that whill chain to source
+* @param3: point to HookId (unsigned int type)
+------------------------------------------------
+AddInlineHook instert inline hook and give you back an HookId
+*/
+unsigned int CaptainHook::AddInlineHook(void **ppvSrc, void *pvDst, unsigned int *puiHookId) {
+
+	HOOK_INF HookInf;
 	unsigned long ulOldProtect;
 	unsigned int uiSizeOfStolenOpcode;
 
-	if (bSafeInitAndVerifyUserPointer(ppvSrc, pvDst) == ERR_ERROR) return CH_USER_POINTER_ERR;
-	if (this->uiFuncitonChainCounter >= this->uiFuncitonChainSize) return 1;
-	
-	GetAddressForSafeHook(JMP_HOOKTYPE_LEN);
+	if (bVerifyUserPointer(ppvSrc, pvDst)) return CH_USER_POINTER_ERR;
 
-	uiSizeOfStolenOpcode = GetAlignedOpcodeForHook(JMP_HOOKTYPE_LEN);
+	uiSizeOfStolenOpcode = CalcAlignedSizeForHook(*ppvSrc, JMP_HOOKTYPE_LEN);
 
 	if (uiSizeOfStolenOpcode == ERR_CANNOT_RESOLVE_ASM) {
 
 		return CH_CAPSTONE_ASM_ERR;
 	}
-	this->pFunctionChain[this->uiFuncitonChainCounter].uiHookSize = uiSizeOfStolenOpcode;
-	this->pFunctionChain[this->uiFuncitonChainCounter].pOriginalFunction = (unsigned char *)this->pvSrc;
-	this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize = uiSizeOfStolenOpcode + JMP_TRAMPOLINE_LEN;
-	this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction = (unsigned char *)VirtualAlloc(NULL, this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-	if (this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction == 0) return Ch_ALLOC_ERR;
-	if (VirtualProtect(this->pvSrc, uiSizeOfStolenOpcode, PAGE_EXECUTE_READWRITE, &ulOldProtect) == 0) return CH_VIRTUALPROTECT_ERR;
-	memcpy(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction, this->pvSrc, uiSizeOfStolenOpcode);
+	else if (uiSizeOfStolenOpcode == 0) {
 
+		return 0;
+	}
+
+	HookInf.uiId = this->uiInternalCounter;
+	HookInf.uiHookSize = uiSizeOfStolenOpcode;
+	HookInf.pDestFunction = (unsigned char *)pvDst;
+	HookInf.pOriginalFunction = (unsigned char *)*ppvSrc;
+	HookInf.uiGlobalSize = uiSizeOfStolenOpcode + JMP_TRAMPOLINE_LEN;
+	HookInf.pEmulatedFunction = (unsigned char *)VirtualAlloc(NULL, HookInf.uiGlobalSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+
+	if (VirtualProtect(*ppvSrc, uiSizeOfStolenOpcode, PAGE_EXECUTE_READWRITE, &ulOldProtect) == 0) {
+
+		VirtualFree(HookInf.pEmulatedFunction, HookInf.uiGlobalSize, MEM_DECOMMIT);
+		return CH_VIRTUALPROTECT_ERR;
+	}
+	if (HookInf.pEmulatedFunction == 0) return CH_ALLOC_ERR;
+	memcpy(HookInf.pEmulatedFunction, *ppvSrc, uiSizeOfStolenOpcode);
+
+	*puiHookId = HookInf.uiId;
+	this->uiInternalCounter++;
+	this->FunctionList.push_back(HookInf);
 
 #if defined(_M_X64) || defined(__amd64__)
 
-	BuildX64Hook(uiSizeOfStolenOpcode);
+	BuildX64Hook(&HookInf);
 #elif _WIN32
 
-	BuildX86Hook(uiSizeOfStolenOpcode);
+	BuildX86Hook(&HookInf);
 #endif
 
 
 	// redirect template function to emulated code.
-	*(addr *)this->pvTargetTemplate = (addr)pFunctionChain[uiFuncitonChainCounter].pEmulatedFunction;
-	this->uiFuncitonChainCounter++;
-	if (FlushInstructionCache(GetCurrentProcess(), this->pvSrc, uiSizeOfStolenOpcode)) return CH_SUCCESS;
+	*(addr *)ppvSrc = (addr)HookInf.pEmulatedFunction;
+	if (FlushInstructionCache(GetCurrentProcess(), *ppvSrc, uiSizeOfStolenOpcode)) return CH_SUCCESS;
 	else return GetLastError();
 }
 
-unsigned int CaptainHook::AddPageGuardHook(void **ppvSrc, void *pvDst) {
+/*
+*
+* @param1: point to source function that will hook
+* @param2: point to dest finction that whill chain to source
+------------------------------------------------
+AddPageGuardHook set memory protection on the first line(whole page..) build a hook and give you back an HookId
+*/
+unsigned int CaptainHook::AddPageGuardHook(void **ppvSrc, void *pvDst, unsigned int *puiHookId) {
 
 	unsigned long ulOldProtect;
-	unsigned int uiSizeOfStolenOpcode;
-	
-	if (bSafeInitAndVerifyUserPointer(ppvSrc, pvDst) == ERR_ERROR) return CH_USER_POINTER_ERR;
-	if (g_uiVectorHandlerChainSize >= g_uiVectorHandlerMaxChainSize) return Ch_MAX_GUARDPAGE_ERR;
+	VECTOREXCPTION_RESOLVED HookInf;
+
+	if (bVerifyUserPointer(ppvSrc, pvDst)) return CH_USER_POINTER_ERR;
 	if (this->pVectorHandle == NULL) return CH_VECTOR_HANDLE_ERR;
 
-	g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnOriginalFunction = (addr)this->pvSrc;
-	g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnHookedFunction = (addr)this->pvDst;
-	
-	uiSizeOfStolenOpcode = GetAlignedOpcodeForHook(PG_HOOKTYPE_LEN);
-	if (uiSizeOfStolenOpcode == ERR_CANNOT_RESOLVE_ASM) {
+	HookInf.uiHookId = this->uiInternalCounter;
+	HookInf.pfnOriginalFunction = (addr)*ppvSrc;
+	HookInf.pfnHookedFunction = (addr)pvDst;
 
-		return CH_CAPSTONE_ASM_ERR;
-	}
-	this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize = uiSizeOfStolenOpcode + JMP_TRAMPOLINE_LEN;
-	this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction = (unsigned char *)VirtualAlloc(NULL, this->pFunctionChain[this->uiFuncitonChainCounter].uiGlobalSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-	if (this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction == 0) {
+	g_VectorHandlerList.push_back(HookInf);
 
-		g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnOriginalFunction = NULL;
-		g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnHookedFunction = NULL;
-		return Ch_ALLOC_ERR;
-	}
-	memcpy(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction, this->pvSrc, uiSizeOfStolenOpcode);
+	if (!VirtualProtect(*ppvSrc, 4, PAGE_GUARD | PAGE_EXECUTE_READWRITE, &ulOldProtect)) {
 
-	*(addr *)this->pvTargetTemplate = (addr)pFunctionChain[uiFuncitonChainCounter].pEmulatedFunction;
-	*((unsigned char *)this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode) = LONG_JMP;
-	*((addr *)((unsigned char *)this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 1)) = (addr)this->pvSrc - (addr)this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction - 5;
-
-
-	if (!VirtualProtect(this->pvSrc, 4, PAGE_GUARD | PAGE_EXECUTE_READWRITE, &ulOldProtect)) {
-
-		g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnOriginalFunction = NULL;
-		g_VectorHandlerChain[g_uiVectorHandlerChainSize].pfnHookedFunction = NULL;
+		g_VectorHandlerList.pop_back();
 		return CH_VPROTECT_ERR;
 	}
-	InterlockedIncrement(&g_uiVectorHandlerChainSize);
+	this->uiInternalCounter++;
 	return CH_SUCCESS;
 }
 
-unsigned int CaptainHook::bSafeInitAndVerifyUserPointer(void **ppvSrc, void *pvDst) {
+/*
+
+*/
+unsigned int CaptainHook::DisableHook(unsigned int uiHookId) {
+
+	for each(HOOK_INF Function in this->FunctionList) {
+
+		if (Function.uiId == uiHookId) {
+
+			memcpy(
+				(void *)Function.pOriginalFunction,
+				(void *)Function.pEmulatedFunction,
+				Function.uiHookSize);
+			
+			return 0;
+		}
+	}
+
+	for (
+		unsigned int uiIndex = 0; uiIndex < g_VectorHandlerList.size(); uiIndex++) {
+
+		if (g_VectorHandlerList[uiIndex].uiHookId == uiHookId) {
+
+			this->DisabledPGHookList.push_back(g_VectorHandlerList[uiIndex]);
+			g_VectorHandlerList.erase(g_VectorHandlerList.begin() + uiIndex);
+		}
+	}
+}
+
+/*
+
+*/
+unsigned int CaptainHook::EnableHook(unsigned int uiHookId) {
+
+	for each(HOOK_INF Function in this->FunctionList) {
+
+		if (Function.uiId == uiHookId) {
+
+			memcpy(
+				(void *)Function.pEmulatedFunction,
+				(void *)Function.pOriginalFunction,
+				Function.uiHookSize);
+
+			return 0;
+		}
+	}
+
+	for (
+		unsigned int uiIndex = 0; uiIndex < this->DisabledPGHookList.size(); uiIndex++) {
+
+		if (this->DisabledPGHookList[uiIndex].uiHookId == uiHookId) {
+
+			g_VectorHandlerList.push_back(this->DisabledPGHookList[uiIndex]);
+			this->DisabledPGHookList.erase(this->DisabledPGHookList.begin() + uiIndex);
+		}
+	}
+}
+
+/*
+*
+* @param1: point to source function that will hook
+* @param2: point to dest finction that whill chain to source
+------------------------------------------------
+this function just verify if userpointer is valid or not
+*/
+unsigned int CaptainHook::bVerifyUserPointer(void **ppvSrc, void *pvDst) {
 
 	unsigned char ucTester;
 	__try {
@@ -167,116 +249,94 @@ unsigned int CaptainHook::bSafeInitAndVerifyUserPointer(void **ppvSrc, void *pvD
 
 		return CH_USER_POINTER_ERR;
 	}
-	this->pvTargetTemplate = ppvSrc;
-	this->pvSrc = *ppvSrc;
-	this->pvDst = pvDst;
-
 	return CH_SUCCESS;
 }
 
-unsigned int CaptainHook::GetAlignedOpcodeForHook(unsigned int uiHookLen) {
+/*
+*
+* @param1: point to source function that will hook
+* @param2: hook type
+------------------------------------------------
+CalcAlignedSizeForHook return how many opcode should steal
+*/
+unsigned int CaptainHook::CalcAlignedSizeForHook(void *pvSrc, unsigned int uiHookLen) {
 
-	csh cshHandle;
-	cs_insn *pInsn;
-	unsigned int uiIndex;
-	unsigned int uiCount;
-	unsigned int uiSizeOfStolenOpcode;
-
-	uiSizeOfStolenOpcode = 0;
-	if (cs_open(CS_ARCH_X86, ARCH_MODE, &cshHandle) != CS_ERR_OK) {
-
-		return ERR_CANNOT_RESOLVE_ASM;
-	}
-	uiCount = (unsigned int)cs_disasm(cshHandle, (unsigned char *)this->pvSrc, 0x50, 0x100, 0, &pInsn);
-	if (uiCount > 0) {
-
-		uiIndex = 0;
-		while ((uiHookLen > uiSizeOfStolenOpcode) && (uiCount >= uiIndex)) {
-
-			uiSizeOfStolenOpcode += pInsn[uiIndex++].size;
-		}
-	}
-	else return ERR_CANNOT_RESOLVE_ASM;
-
-	return uiSizeOfStolenOpcode;
-}
-
-unsigned int CaptainHook::GetAddressForSafeHook(unsigned int uiHookLen) {
-
-	/*
-	* this routine analyze the code flow and detect redirect to another function
-	* this code work with AnalyzeStartOfCodeForSafePatch
-	*/
 	csh cshHandle;
 	cs_insn *pInsn;
 	unsigned int uiCount;
 	unsigned int uiByteCounter;
 
+	uiByteCounter = 0;
 	if (cs_open(CS_ARCH_X86, ARCH_MODE, &cshHandle) != CS_ERR_OK) {
 
 		return ERR_CANNOT_RESOLVE_ASM;
 	}
-	uiCount = (unsigned int)cs_disasm(cshHandle, (unsigned char *)this->pvSrc, 0x50, 0x100, 0, &pInsn);
-	if (uiCount >= uiHookLen) {
+	uiCount = (unsigned int)cs_disasm(cshHandle, (unsigned char *)pvSrc, 0x50, 0x100, 0, &pInsn);
+	if (uiCount > 0) {
 
-		uiByteCounter = 0;
+		unsigned char *pucBytes = pInsn->bytes;
 		for (unsigned int uiIndex = 0; uiIndex < uiCount; uiIndex++) {
 
-			char *pszInstStr = pInsn[uiIndex].mnemonic;
-			if (pszInstStr[0] != *(unsigned char *)"j") {
+			if (pucBytes[uiIndex] == 0xeb) { // jmp
+
+				/* right now this flow isnt handled */
+				cs_free(pInsn, uiCount);
+				cs_close(&cshHandle);
+				return 0;
+			}
+			else if ((pucBytes[uiIndex] >= 0x70) && (pucBytes[uiIndex] <= 0x7f)) { // !jz/nz/g/ng etc.
+
+				/* right now this flow isnt handled */
+				cs_free(pInsn, uiCount);
+				cs_close(&cshHandle);
+				return 0;
+			}
+			else {
 
 				uiByteCounter += pInsn[uiIndex].size;
 				if (uiByteCounter >= uiHookLen) {
 
-					return 0;
+					cs_free(pInsn, uiCount);
+					cs_close(&cshHandle);
+					return uiByteCounter;
 				}
 			}
-			else {
-
-			}
 		}
 	}
-	return 0;
-}
+	else {
 
-unsigned int CaptainHook::AnalyzeStartOfCodeForSafePatch(cs_insn *pInsn, unsigned int uiCount, unsigned int uiHookLen) {
-
-	/*
-	* this routine analyzes the code, and updates pvSrc for safe hook. for example:
-	*	| kernel32.GetProcAddress     : mov r8,qword ptr ss:[rsp]
-	*	| kernel32.GetProcAddress + 4 : jmp qword ptr ds:[<&GetProcAddressForCaller>]
-	* in this situation hot patch destroy the function, cause GetProcAddress redirect to GetProcAddressForCaller.
-	* in this situation this routine fix the source function to GetProcAddressForCaller. 
-	*/
-	for (unsigned int uiIndex = 0; uiIndex < uiCount; uiIndex++) {
-
-		while (
-			(uiIndex > uiHookLen) ||
-			(pInsn[uiIndex].mnemonic[0] != *(char *)"j") || /*--detect jmp  instuction--*/
-			(pInsn[uiIndex].mnemonic[0] != *(char *)"c")    /*--detect call instuction--*/
-			) {
-
-			uiIndex++;
-		}
+		cs_close(&cshHandle);
+		return ERR_CANNOT_RESOLVE_ASM;
 	}
-	return 0;
 }
 
-unsigned int CaptainHook::BuildX86Hook(unsigned int uiSizeOfStolenOpcode) {
+/*
+*
+* @param1: point to HOOK_INF strunt contains information about your hook
+------------------------------------------------
+BuildX86Hook just build x86 inline hook
+*/
+unsigned int CaptainHook::BuildX86Hook(HOOK_INF *pFunction) {
 
 	// build trampoline from hookchain to real code.
-	*((unsigned char *)this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode) = LONG_JMP;
-	*((addr *)((unsigned char *)this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 1)) = (addr)this->pvSrc - (addr)this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction - 5;
+	*((unsigned char *)pFunction->pEmulatedFunction + pFunction->uiHookSize) = LONG_JMP;
+	*((unsigned int *)((unsigned char *)pFunction->pEmulatedFunction + pFunction->uiHookSize + 1)) = (unsigned int)pFunction->pOriginalFunction - (unsigned int)pFunction->pEmulatedFunction - 5;
 
 	// build trampoline from real code to hook function.
-	*(unsigned char *)this->pvSrc = LONG_JMP;
-	*((addr *)((unsigned char *)this->pvSrc + 1)) = (addr)this->pvDst - (addr)this->pvSrc - 5;
+	*(unsigned char *)pFunction->pOriginalFunction = LONG_JMP;
+	*((unsigned int *)((unsigned char *)pFunction->pOriginalFunction + 1)) = (unsigned int)pFunction->pDestFunction - (unsigned int)pFunction->pOriginalFunction - 5;
 
 
 	return CH_SUCCESS;
 }
 
-unsigned int CaptainHook::BuildX64Hook(unsigned int uiSizeOfStolenOpcode) {
+/*
+*
+* @param1: point to HOOK_INF strunt contains information about your hook
+------------------------------------------------
+BuildX86Hook just build x64 inline hook
+*/
+unsigned int CaptainHook::BuildX64Hook(HOOK_INF *pFunction) {
 
 	/*
 	* hook type for x64:
@@ -287,22 +347,22 @@ unsigned int CaptainHook::BuildX64Hook(unsigned int uiSizeOfStolenOpcode) {
 	*/
 
 	// build trampoline from hookchain to real code.
-	*(unsigned short *)(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode) = PUSH_0;
-	*(unsigned short *)(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 2) = MOV_RSP & 0xffff;
-	*(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 4) = MOV_RSP >> 0x10;
-	*(unsigned int *)(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 5) = (unsigned int)(((addr)this->pvSrc + uiSizeOfStolenOpcode) & 0xffffffff);
-	*(unsigned int *)(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 9) = MOV_RSP4;
-	*(unsigned int *)(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 13) = (unsigned int)(((addr)this->pvSrc + uiSizeOfStolenOpcode) >> 0x20);
-	*(unsigned char *)(this->pFunctionChain[this->uiFuncitonChainCounter].pEmulatedFunction + uiSizeOfStolenOpcode + 17) = RET;
+	*(unsigned short *)(pFunction->pEmulatedFunction + pFunction->uiHookSize) = PUSH_0;
+	*(unsigned short *)(pFunction->pEmulatedFunction + pFunction->uiHookSize + 2) = MOV_RSP & 0xffff;
+	*(unsigned char *)(pFunction->pEmulatedFunction + pFunction->uiHookSize + 4) = MOV_RSP >> 0x10;
+	*(unsigned int *)(pFunction->pEmulatedFunction + pFunction->uiHookSize + 5) = (unsigned int)(((unsigned long long)pFunction->pOriginalFunction + pFunction->uiHookSize) & 0xffffffff);
+	*(unsigned int *)(pFunction->pEmulatedFunction + pFunction->uiHookSize + 9) = MOV_RSP4;
+	*(unsigned int *)(pFunction->pEmulatedFunction + pFunction->uiHookSize + 13) = (unsigned int)(((unsigned long long)pFunction->pOriginalFunction + pFunction->uiHookSize) >> 0x20);
+	*(unsigned char *)(pFunction->pEmulatedFunction + pFunction->uiHookSize + 17) = RET;
 
 	// build trampoline from real code to hook function.
-	*(unsigned short *)((unsigned char *)this->pvSrc) = PUSH_0;
-	*(unsigned short *)((unsigned char *)this->pvSrc + 2) = MOV_RSP & 0xffff;
-	*((unsigned char *)this->pvSrc + 4) = MOV_RSP >> 0x10;
-	*(unsigned int *)((unsigned char *)this->pvSrc + 5) = (unsigned int)(((addr)(unsigned char *)this->pvDst) & 0xffffffff);
-	*(unsigned int *)((unsigned char *)this->pvSrc + 9) = MOV_RSP4;
-	*(unsigned int *)((unsigned char *)this->pvSrc + 13) = (unsigned int)(((addr)(unsigned char *)this->pvDst) >> 0x20);
-	*(unsigned char *)((unsigned char *)this->pvSrc + 17) = RET;
+	*(unsigned short *)((unsigned char *)pFunction->pOriginalFunction) = PUSH_0;
+	*(unsigned short *)((unsigned char *)pFunction->pOriginalFunction + 2) = MOV_RSP & 0xffff;
+	*((unsigned char *)pFunction->pOriginalFunction + 4) = MOV_RSP >> 0x10;
+	*(unsigned int *)((unsigned char *)pFunction->pOriginalFunction + 5) = (unsigned int)(((unsigned long long)(unsigned char *)pFunction->pDestFunction) & 0xffffffff);
+	*(unsigned int *)((unsigned char *)pFunction->pOriginalFunction + 9) = MOV_RSP4;
+	*(unsigned int *)((unsigned char *)pFunction->pOriginalFunction + 13) = (unsigned int)(((unsigned long long)(unsigned char *)pFunction->pDestFunction) >> 0x20);
+	*(unsigned char *)((unsigned char *)pFunction->pOriginalFunction + 17) = RET;
 
 	return CH_SUCCESS;
 }
