@@ -16,42 +16,42 @@ extern "C" {
 		Ch_MAX_GUARDPAGE_ERR,
 		CH_VPROTECT_ERR,
 		CH_CAPSTONE_ASM_ERR,
-		Ch_ALLOC_ERR,
-		CH_VIRTUALPROTECT_ERR
+		CH_ALLOC_ERR,
+		CH_VIRTUALPROTECT_ERR,
 	};
-	typedef struct _FUNCTION_CHAIN {
+	typedef struct _HOOK_INF {
 
 		unsigned char *pOriginalFunction;
 		unsigned char *pEmulatedFunction;
+		unsigned char *pDestFunction;
 		unsigned int uiHookSize;
+		unsigned int uiId;
 		unsigned int uiGlobalSize;
-	} FUNCTION_CHAIN, *PFUNCTION_CHAIN;
+	} HOOK_INF, *PHOOK_INF;
 
 #pragma pack(1)
 	class CaptainHook {
 
 	private:
-		void *pvSrc;
-		void *pvDst;
-		
+
 		void *pVectorHandle;
-		void *pvTargetTemplate;
-		PFUNCTION_CHAIN pFunctionChain;
-		unsigned int uiFuncitonChainSize;
-		unsigned int uiFuncitonChainCounter;
-		unsigned int CaptainHook::GetAddressForSafeHook(unsigned int uiHookLen);
-		unsigned int CaptainHook::GetAlignedOpcodeForHook(unsigned int uiHookLen);
-		unsigned int CaptainHook::BuildX86Hook(unsigned int uiSizeOfStolenOpcode);
-		unsigned int CaptainHook::BuildX64Hook(unsigned int uiSizeOfStolenOpcode);
-		addr CaptainHook::CreateDistanceForLongJmpWithUpDirection(addr aFrom, addr aTo);		
-		unsigned int CaptainHook::bSafeInitAndVerifyUserPointer(void **ppvSrc, void *pvDst);
-		unsigned int CaptainHook::AnalyzeStartOfCodeForSafePatch(cs_insn *pInsn, unsigned int nCount, unsigned int uiHookLen);
+		unsigned int uiInternalCounter;
+		std::vector<HOOK_INF> FunctionList;
+		std::vector<VECTOREXCPTION_RESOLVED> DisabledPGHookList;
+		unsigned int CaptainHook::BuildX86Hook(HOOK_INF *pFunction);
+		unsigned int CaptainHook::BuildX64Hook(HOOK_INF *pFunction);
+		unsigned int CaptainHook::bVerifyUserPointer(void **ppvSrc, void *pvDst);
+		unsigned int CaptainHook::CalcAlignedSizeForHook(void *pvSrc, unsigned int uiHookLen);
 
 	public:
 		CaptainHook::CaptainHook();
 		CaptainHook::~CaptainHook();
+		unsigned int CaptainHook::DisableHook(unsigned int uiHookId);
+		unsigned int CaptainHook::EnableHook(unsigned int uiHookId);
 		unsigned int CaptainHook::AddInlineHook(void **ppvSrc, void *pvDst);
 		unsigned int CaptainHook::AddPageGuardHook(void **ppvSrc, void *pvDst);
+		unsigned int CaptainHook::AddInlineHook(void **ppvSrc, void *pvDst, unsigned int *puiHookId);
+		unsigned int CaptainHook::AddPageGuardHook(void **ppvSrc, void *pvDst, unsigned int *puiHookId);
 
 	};
 #pragma pack()
